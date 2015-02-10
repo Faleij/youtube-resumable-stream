@@ -1,14 +1,17 @@
 {
-  "name": "node-youtube-resumable-upload",
-  "version": "0.0.6",
-  "description": "Create resumable uploads via googleapis",
+  "name": "youtube-resumable-stream",
+  "version": "0.0.0",
+  "description": "Create resumable upload stream via googleapis",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Gray Leonard",
+  "author": {
+    "name": "Marcus Faleij"
+  },
   "license": "ISC",
   "dependencies": {
+    "content-range": "^0.2.0",
     "google-auth-cli": "0.0.1",
     "mime": "^1.2.11",
     "request": "^2.36.0"
@@ -19,7 +22,7 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "https://github.com/grayleonard/node-youtube-resumable-upload.git"
+    "url": "https://github.com/faleij/youtube-resumable-stream.git"
   },
   "keywords": [
     "youtube",
@@ -29,7 +32,35 @@
     "googleapis"
   ],
   "bugs": {
-    "url": "https://github.com/grayleonard/node-youtube-resumable-upload/issues"
+    "url": "https://github.com/faleij/youtube-resumable-stream/issues"
   },
-  "homepage": "https://github.com/grayleonard/node-youtube-resumable-upload"
+  "homepage": "https://github.com/faleij/youtube-resumable-stream",
+  "_npmVersion": "2.0.0",
+  "_npmUser": {
+    "name": "faleij",
+    "email": "marcus.faleij@jappa.jobs"
+  },
+  "maintainers": [
+    {
+      "name": "faleij",
+      "email": "marcus.faleij@jappa.jobs"
+    }
+  ],
+  "jshintConfig": {
+    "node": true,
+    "mocha": true,
+    "indent": 4,
+    "eqeqeq": true,
+    "quotmark": "single",
+    "asi": false,
+    "es5": true,
+    "globals": {
+      "describe": true,
+      "it": true,
+      "before": true,
+      "beforeEach": true,
+      "after": true,
+      "afterEach": true
+    }
+  }
 }
