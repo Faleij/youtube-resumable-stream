@@ -29,14 +29,17 @@ var upload = function() {
     resumableUpload.eventEmitter.on('progress', function(progress) {
         console.log(progress);
     });
+    resumableUpload
+        .on('success', function(result) {
+            //success handler
+            console.log(result);
+        })
+        .on('error', function(error) {
+            //error handler
+            console.log('Upload failed');
+            console.log(JSON.stringify(error));
+        });
     fs.createReadStream(resumableUpload.filepath).pipe(resumableUpload);
-    resumableUpload.initUpload(function(result) {
-        console.log(result);
-        return;
-    }, function(error) {
-        console.log('Upload failed');
-        console.log(JSON.stringify(error));
-    });
 };
 
 var getTokens = function(callback) {

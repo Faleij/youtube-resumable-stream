@@ -25,12 +25,21 @@ resumableUpload.filepath = './video.mp4';
 resumableUpload.metadata = metadata; //include the snippet and status for the video
 resumableUpload.monitor = true;
 resumableUpload.retry = 3; // Maximum retries when upload failed.
+resumableUpload
+	.on('success', function(result) {
+		// success handler
+		console.log(result);
+	})
+	.on('error', function(error) {
+		// error handler - any type of error
+		console.log(error);
+	})
+	.on('ready', function() {
+		// resumableUpload will now begin to upload data to youtube
+		// resumableUpload should now be saved with resumableUpload.serailize()
+		// tokens will not be serialized for security reasons
+		// use resumableUpload.deserialize(serializedData) to restore state and then pipe a stream to resume
+	});
+// resumableUpload initiates the upload when it has a readable stream
 fs.createReadStream(resumableUpload.filepath).pipe(resumableUpload);
-resumableUpload.initUpload(function(result) {
-	//success handler
-	console.log(result);
-}, function(error) {
-	//error handler
-	console.log(error);
-});
 ```
