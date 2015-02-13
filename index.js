@@ -121,8 +121,6 @@ ResumableUpload.prototype.putUpload = function() {
 		});
 	}
 
-	console.log('putUpload');
-
 	try {
 		this.pipe(request.put(options, function(error, response, body) {
 			if (error) {
