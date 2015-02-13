@@ -39,7 +39,7 @@ ResumableUpload.prototype.serialize = function() {
 };
 
 ResumableUpload.prototype.deserialize = function(data) {
-	Object.keys(data).forEach(function (key) {
+	Object.keys(data).forEach(function(key) {
 		this[key] = data[key];
 	}.bind(this));
 	return this;
@@ -64,7 +64,7 @@ ResumableUpload.prototype.initUpload = function() {
 		},
 		body: JSON.stringify(this.metadata)
 	};
-	
+
 	//Send request and start upload if success
 	request.post(options, function(error, response, body) {
 		if (!error) {
@@ -83,14 +83,26 @@ ResumableUpload.prototype.initUpload = function() {
 	});
 };
 
+ResumableUpload.prototype._getProgressCallback = function(err, response) {
+	console.log('_getProgressCallback');
+	if (err) {
+		return this.emit('error', err);
+	}
+	if (response.statusCode === 308) {
+		this.initUpload();
+	} else {
+		this.emit('error', new Error('not resumable'));
+	}
+};
+
 //Pipes uploadPipe to self.location (Google's Location header)
 ResumableUpload.prototype.putUpload = function() {
 	var self = this;
-	
+
 	if (self.monitor) { //start monitoring (defaults to false)
 		self.startMonitoring();
 	}
-	
+
 	var options = {
 		url: self.location, //self.location becomes the Google-provided URL to PUT to
 		headers: {
@@ -99,7 +111,7 @@ ResumableUpload.prototype.putUpload = function() {
 			'Content-Type': mime.lookup(self.filepath)
 		}
 	};
-	
+
 	if (self.byteCount > 0) {
 		options.headers['Content-Range'] = contentRange.format({
 			name: 'bytes',
@@ -108,7 +120,9 @@ ResumableUpload.prototype.putUpload = function() {
 			count: parseInt(self.size, 10)
 		});
 	}
-	
+
+	console.log('putUpload');
+
 	try {
 		this.pipe(request.put(options, function(error, response, body) {
 			if (error) {
@@ -116,14 +130,10 @@ ResumableUpload.prototype.putUpload = function() {
 
 				// Allow unlimited retries
 				if (self.retry === -1) {
-					self.getProgress(function() {
-						self.initUpload();
-					});
+					self.getProgress(self._getProgressCallback);
 				} else if (self.retry > 0) {
 					self.retry--;
-					self.getProgress(function() {
-						self.initUpload();
-					});
+					self.getProgress(self._getProgressCallback);
 				}
 
 				return;
@@ -139,9 +149,7 @@ ResumableUpload.prototype.putUpload = function() {
 		//Restart upload
 		if (self.retry > 0) {
 			self.retry--;
-			self.getProgress(function() {
-				self.initUpload();
-			});
+			self.getProgress(self._getProgressCallback);
 		}
 	}
 };
@@ -185,14 +193,16 @@ ResumableUpload.prototype.getProgress = function(cb) {
 	request.put(options, function(error, response, body) {
 		if (error) {
 			console.log(error);
-			return cb(error);
+			return cb.call(self, error);
 		}
-		try {
-			self.byteCount = parseInt(response.headers.range.split('-')[1], 10); //parse response
-		} catch (e) {
-			return cb(e);
+		if (response.statusCode === 308) {
+			try {
+				self.byteCount = parseInt(response.headers.range.split('-')[1], 10); //parse response
+			} catch (e) {
+				return cb.call(self, e);
+			}
 		}
-		cb(null, response);
+		cb.call(self, null, response);
 	});
 };
 
