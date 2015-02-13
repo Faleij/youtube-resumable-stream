@@ -84,7 +84,6 @@ ResumableUpload.prototype.initUpload = function() {
 };
 
 ResumableUpload.prototype._getProgressCallback = function(err, response) {
-	console.log('_getProgressCallback');
 	if (err) {
 		return this.emit('error', err);
 	}
