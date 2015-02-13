@@ -29,7 +29,6 @@ ResumableUpload.prototype.serialize = function() {
 	return {
 		byteCount: this.byteCount,
 		size: this.size,
-		tokens: this.tokens,
 		filepath: this.filepath,
 		metadata: this.metadata,
 		monitor: this.monitor,
