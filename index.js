@@ -41,7 +41,7 @@ ResumableUpload.prototype.serialize = function() {
 ResumableUpload.prototype.deserialize = function(data) {
 	Object.keys(data).forEach(function (key) {
 		this[key] = data[key];
-	});
+	}.bind(this));
 	return this;
 };
 

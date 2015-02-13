@@ -1,6 +1,6 @@
 {
   "name": "youtube-resumable-stream",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Create resumable upload stream via googleapis",
   "main": "index.js",
   "scripts": {
